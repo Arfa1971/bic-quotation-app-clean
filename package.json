@@ -1,0 +1,11 @@
+{
+  "name": "bic-quotation-app-clean",
+  "version": "1.0.0",
+  "description": "BIC Quotation Application",
+  "scripts": {
+    "install:all": "cd frontend && npm install && cd ../backend && npm install",
+    "build": "cd frontend && npm run build",
+    "start:frontend": "cd frontend && npm run dev",
+    "start:backend": "cd backend && npm run dev"
+  }
+}
