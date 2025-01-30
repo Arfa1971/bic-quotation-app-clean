@@ -48,9 +48,13 @@ app.get('/api/products', async (req, res) => {
 
     if (error) throw error;
 
-    res.json(data);
+    // Ensure we always return an array
+    const products = Array.isArray(data) ? data : [];
+    console.log('Products fetched:', products); // Debug log
+    
+    res.json(products);
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error fetching products:', error);
     res.status(500).json({ error: 'Error fetching products' });
   }
 });

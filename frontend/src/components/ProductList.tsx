@@ -20,10 +20,21 @@ export function ProductList() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/products`)
-        setProducts(response.data)
+        const response = await axios.get(`${API_BASE_URL}/api/products`)
+        const data = response.data
+        
+        // Ensure we're working with an array
+        if (Array.isArray(data)) {
+          setProducts(data)
+        } else {
+          console.error('Received non-array data:', data)
+          setProducts([])
+          setError('Invalid data format received')
+        }
       } catch (err) {
+        console.error('Error fetching products:', err)
         setError('Error loading products')
+        setProducts([])
       } finally {
         setLoading(false)
       }
@@ -32,8 +43,9 @@ export function ProductList() {
     fetchProducts()
   }, [])
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>{error}</div>
+  if (loading) return <div className="text-center p-4">Loading...</div>
+  if (error) return <div className="text-center p-4 text-red-500">{error}</div>
+  if (products.length === 0) return <div className="text-center p-4">No products found</div>
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
