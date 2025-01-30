@@ -8,13 +8,31 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3001;
 
-// Middleware
+// CORS configuration
+const allowedOrigins = [
+  'https://bic-quotation-app-clean.vercel.app',
+  'https://bic-quotation-app-clean-git-main-arfaces-projects.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:5173'
+];
+
 app.use(cors({
-  origin: '*',
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
 app.use(express.json());
+
+// Add OPTIONS handling for preflight requests
+app.options('*', cors());
 
 // Supabase client
 const supabaseUrl = process.env.VITE_SUPABASE_URL!;
